@@ -1,0 +1,26 @@
+{
+  "generated": "2026-07-09",
+  "projects": [
+    {
+      "slug": "dev-os",
+      "title": "Personal Knowledge & Creation OS",
+      "description": "個人の学習・研究・創作・開発を一貫フローで支える、AI非依存のMarkdownベース開発OS。作品を生み出す母艦そのもの",
+      "year": 2026,
+      "status": "active",
+      "category": [
+        "ai"
+      ],
+      "tech": [
+        "Markdown",
+        "Git",
+        "Claude Code",
+        "Obsidian",
+        "Node.js"
+      ],
+      "form": "Markdown + Git + AIエージェント",
+      "url": "https://shimi-works.github.io/dev-os-showcase/",
+      "github": "",
+      "thumbnail": ""
+    }
+  ]
+}

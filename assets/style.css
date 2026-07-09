@@ -1,0 +1,146 @@
+/* ポートフォリオ中央サイト 共通スタイル（唯一のデザイン置き場）
+   デザイン変更はこのファイルを直して generate.mjs で全ページ再生成する。
+   ダークテーマ基本 / ライトも対応 / 8pxグリッド。 */
+
+:root {
+  --bg: #12141a;
+  --bg-elev: #1a1d26;
+  --bg-hover: #222634;
+  --border: #2b2f3d;
+  --text: #e6e8ef;
+  --text-dim: #a2a7b8;
+  --accent: #7aa2f7;
+  --accent-soft: rgba(122, 162, 247, 0.14);
+  --chip: #232838;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  --radius: 12px;
+  --gap: 8px;
+  --maxw: 1080px;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f6f7fb;
+    --bg-elev: #ffffff;
+    --bg-hover: #eef1f8;
+    --border: #e0e3ec;
+    --text: #1c1f2a;
+    --text-dim: #5a6072;
+    --accent: #3b5bdb;
+    --accent-soft: rgba(59, 91, 219, 0.10);
+    --chip: #eef1f8;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Meiryo", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+
+/* ---- ヘッダー ---- */
+.site-header { padding: 56px 0 24px; }
+.site-header h1 { margin: 0 0 8px; font-size: 32px; letter-spacing: 0.02em; }
+.site-header .tagline { margin: 0 0 16px; color: var(--accent); font-size: 17px; font-weight: 600; }
+.site-header .intro { margin: 0; color: var(--text-dim); max-width: 680px; }
+
+/* ---- フィルタ ---- */
+.filters { display: flex; flex-wrap: wrap; gap: var(--gap); padding: 24px 0 8px; }
+.chip {
+  border: 1px solid var(--border);
+  background: var(--chip);
+  color: var(--text-dim);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 180ms ease;
+  user-select: none;
+}
+.chip:hover { background: var(--bg-hover); color: var(--text); }
+.chip.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+
+/* ---- カードグリッド ---- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 24px 0 64px;
+}
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+}
+.card:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--accent); }
+.card a.card-link { color: inherit; text-decoration: none; display: flex; flex-direction: column; height: 100%; }
+.card .thumb {
+  aspect-ratio: 16 / 9;
+  background: linear-gradient(135deg, var(--bg-hover), var(--chip));
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-dim); font-size: 13px;
+}
+.card .thumb img { width: 100%; height: 100%; object-fit: cover; }
+.card .body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.card .body h2 { margin: 0; font-size: 18px; }
+.card .body .desc { margin: 0; color: var(--text-dim); font-size: 14px; flex: 1; }
+.card .meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.card .meta .tag { font-size: 11px; color: var(--text-dim); background: var(--chip); padding: 2px 8px; border-radius: 6px; }
+.card .meta .year { font-size: 12px; color: var(--text-dim); margin-left: auto; }
+
+.empty { padding: 48px 0; color: var(--text-dim); text-align: center; }
+
+/* ---- 詳細ページ ---- */
+.detail-header { padding: 40px 0 8px; border-bottom: 1px solid var(--border); }
+.back { font-size: 14px; color: var(--text-dim); }
+.detail-header h1 { margin: 12px 0 8px; font-size: 30px; }
+.detail-header .desc { margin: 0 0 16px; color: var(--text-dim); font-size: 17px; }
+.detail-meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 16px; }
+.detail-meta .tag { font-size: 12px; color: var(--text-dim); background: var(--chip); padding: 4px 10px; border-radius: 6px; }
+.links { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: 1px solid var(--border); background: var(--bg-elev);
+  color: var(--text); padding: 8px 16px; border-radius: 8px;
+  font-size: 14px; transition: all 180ms ease;
+}
+.btn:hover { background: var(--bg-hover); border-color: var(--accent); text-decoration: none; }
+.btn.primary { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+
+.article { padding: 8px 0 80px; }
+.article h2 { margin: 40px 0 12px; font-size: 22px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+.article h3 { margin: 28px 0 8px; font-size: 17px; }
+.article p { margin: 0 0 14px; }
+.article ul, .article ol { margin: 0 0 14px; padding-left: 24px; }
+.article li { margin: 4px 0; }
+.article strong { color: var(--text); }
+.article code {
+  background: var(--chip); padding: 2px 6px; border-radius: 5px;
+  font-family: "Cascadia Code", Consolas, monospace; font-size: 0.9em;
+}
+.article blockquote {
+  margin: 0 0 16px; padding: 8px 16px;
+  border-left: 3px solid var(--accent); background: var(--bg-elev);
+  color: var(--text-dim); border-radius: 0 8px 8px 0;
+}
+.article img { max-width: 100%; border-radius: 8px; }
+
+/* 技術的判断ブロックを目立たせる（課題→判断→理由の連続 strong 段落） */
+.article p strong:first-child { color: var(--accent); }
+
+.site-footer { padding: 32px 0; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; text-align: center; }

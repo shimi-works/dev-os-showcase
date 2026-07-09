@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Personal Knowledge &amp; Creation OS — ポートフォリオ</title>
+<meta name="description" content="個人の学習・研究・創作・開発を一貫フローで支える、AI非依存のMarkdownベース開発OS。作品を生み出す母艦そのもの">
+<link rel="stylesheet" href="../assets/style.css">
+<!-- このファイルは自動生成されます（dev-os/scripts/portfolio/generate.mjs）。直接編集しないこと。原稿は portfolio/dev-os.md。 -->
+</head>
+<body>
+<header class="detail-header">
+  <div class="wrap">
+    <a class="back" href="../index.html">← 作品一覧へ</a>
+    <h1>Personal Knowledge &amp; Creation OS</h1>
+    <p class="desc">個人の学習・研究・創作・開発を一貫フローで支える、AI非依存のMarkdownベース開発OS。作品を生み出す母艦そのもの</p>
+    <div class="detail-meta"><span class="tag">2026</span>
+      <span class="tag">Markdown + Git + AIエージェント</span>
+      <span class="tag">AI</span>
+      <span class="tag">Markdown</span>
+      <span class="tag">Git</span>
+      <span class="tag">Claude Code</span>
+      <span class="tag">Obsidian</span>
+      <span class="tag">Node.js</span></div>
+    <div class="links"><a class="btn primary" href="https://shimi-works.github.io/dev-os-showcase/" target="_blank" rel="noopener">公開サイトを開く ↗</a></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <article class="article">
+<h2>これは何か</h2>
+<p>Webアプリではなく、<strong>Markdownファイル群 + Git + AIエージェント</strong>で構成される「個人用の開発OS」。アイデアを貯め、資料を理解し、要件から実装・リリース・振り返りまでを一貫フローで回し、そこで得た知見を複利で蓄積する。学習・研究・個人開発・創作・キャリア形成を横断して支える「第二の脳」。</p>
+<p>特徴は <strong>AIに依存しないこと</strong>。状態・知識・ルールはすべてMarkdown側に残り、AI（Claude / ChatGPT / Gemini …）は交換可能な実行エンジンとして振る舞う。——そして、このポートフォリオが説明している対象こそ、この仕組みそのものである（システムが自分自身を記録している）。</p>
+<h2>解決したかった課題 / 制作背景</h2>
+<p>AIと個人開発を続けるうちに、致命的な非対称に気づいた。<strong>知識も状態も「会話の中」に溜まっていく</strong>こと。会話は流れて消え、モデルを乗り換えれば失われ、昨日の判断は今日のセッションからは見えない。ツールとしてのAIは強力なのに、その成果が蓄積されない。</p>
+<p>「AIを記憶装置として使うのをやめ、AIは実行者に徹させ、記憶は自分が所有するファイルに置く」——この一点を設計の中心に据えて作った。</p>
+<h2>設計思想（3〜5項目）</h2>
+<ul>
+<li><strong>ファイルが唯一の真実（Single Source of Truth）</strong> — 状態はすべてプレーンテキスト。grep でき、Git が履歴を持ち、10年後も開ける。</li>
+<li><strong>AIはOSではなくエンジン</strong> — 運用マニュアルの正典（<code>DEVELOPMENT_OS.md</code>）はAI中立。各AI固有の接着剤は薄いアダプタ（<code>CLAUDE.md</code> / <code>AGENTS.md</code>）に隔離する。</li>
+<li><strong>UIは投影レイヤー</strong> — 表示層（Obsidian・ダッシュボード）はファイルを読むだけ。状態を持たせない。いつでも作り直せる。</li>
+<li><strong>規約がツールに勝る</strong> — 複雑な仕組みより、一貫した命名・構造・テンプレートで戦う。壊れる部品を減らす。</li>
+<li><strong>一情報一箇所</strong> — 同じ情報を複数箇所に持たない（drift防止）。文章＝Markdown、コード＝GitHub、公開サイト＝GitHub Pages。</li>
+</ul>
+<h2>主要機能</h2>
+<ul>
+<li><strong>2つのエージェント</strong>: Research Agent（資料を要約ではなく構造化理解ノートへ変換）／ Idea Prototyper（曖昧なアイデアを Concept/Feature/設計/Roadmap/Risk/Next へ展開）</li>
+<li><strong>OSコマンド群</strong>（<code>.claude/commands/os-*</code>）: アイデア記録・企画化・プロジェクト生成・タスク分解・バグ管理・開発ログ・リリースチェック・振り返り・知見保存・ポートフォリオ生成 …をスラッシュコマンドで起動</li>
+<li><strong>プロジェクト管理</strong>: 1プロジェクト=1ディレクトリ（requirements/design/tasks/bugs/devlog/handover/retrospective）</li>
+<li><strong>Knowledge Base</strong>: patterns / pitfalls / research を <code>[[slug]]</code> でネットワーク化</li>
+<li><strong>ポートフォリオ生成</strong>: <code>portfolio/&lt;slug&gt;.md</code> を唯一の真実に、スクリプトが決定的にサイトを生成（このページ自身もそれで生成されている）</li>
+<li><strong>検証スキル</strong>: 単一HTMLアプリの起動確認を必須化する verify-single-html 等</li>
+</ul>
+<h2>技術構成</h2>
+<ul>
+<li>状態・知識: Markdown + YAML frontmatter（<code>status</code>/<code>created</code>/<code>updated</code>/<code>tags</code>）</li>
+<li>バージョン管理: Git（履歴＝「いつ何を決めたか」の台帳）</li>
+<li>ランタイム: Claude Code（<code>.claude/commands/</code> = OSのシステムコール）</li>
+<li>表示層: Obsidian（グラフ・バックリンク・検索）＋ 単一HTMLダッシュボード</li>
+<li>ポートフォリオ生成: Node.js（<code>gray-matter</code> + <code>marked</code>）</li>
+</ul>
+<h2>技術的判断（最重要）</h2>
+<p><strong>課題</strong>: AIとの会話に知識・状態が閉じ込められ、モデルを変えると失われる。<br><strong>判断</strong>: 状態をすべてMarkdownに外部化し、AIを交換可能な実行エンジンにする。運用マニュアルの正典 <code>DEVELOPMENT_OS.md</code>（AI中立）と、各AI固有の薄いアダプタ（<code>CLAUDE.md</code> / <code>AGENTS.md</code>）を分離した。<br><strong>理由</strong>: これによりAIモデルの交代・エディタ変更・UIの作り直しのすべてに耐え、資産（prompts/templates/knowledge/portfolio）がそのまま残る。</p>
+<p><strong>課題</strong>: チャット履歴に頼ると、新しいセッションで文脈を失い再開できない。<br><strong>判断</strong>: 「Markdown=状態、チャット=一時メモリ」を大原則に、<code>handover.md</code>（上書き＝引き継ぎ「次どこへ」）と <code>devlog.md</code>（追記＝履歴「何をしたか」）を役割分離した。<br><strong>理由</strong>: 新規セッションが handover.md ＋ プロジェクトファイルだけで、過去の会話を一切遡らず完全に再開できる。</p>
+<p><strong>課題</strong>: 表示UIを作り込むほど保守負担が増え、UIの寿命にデータが縛られる。<br><strong>判断</strong>: 依存方向を「データ層 → ランタイム層 → 表示層」の一方向に固定し、表示層は状態を持たない投影に徹させた。<br><strong>理由</strong>: UIが消えてもデータは無傷。ダッシュボードもObsidianも「いつでも捨てて作り直せる」部品になる。</p>
+<p><strong>課題</strong>: ポートフォリオがコード・README・公開サイトに分散し、更新のたびに食い違う（drift）。<br><strong>判断</strong>: <code>portfolio/&lt;slug&gt;.md</code> を唯一の真実とし、README・サイトはスクリプトで決定的に生成する（原稿＝人の判断、変換＝機械）。<br><strong>理由</strong>: 一情報一箇所を保て、AIに毎回HTMLを書かせる不確実性も排除できる。</p>
+<h2>検討した他案</h2>
+<ul>
+<li><strong>試した案</strong>: Notion 等のデータベース型ツールで一元管理 / <strong>なぜ捨てたか</strong>: ベンダーロックイン・grep不可・オフライン不可・長期保存の不安・AIから直接読み書きしにくい / <strong>最終判断</strong>: プレーンテキスト + Git。所有権と可搬性を最優先した。</li>
+</ul>
+<h2>苦労した点</h2>
+<ul>
+<li><strong>AI非依存の「正典とアダプタ」の切り分け</strong>: どこまでを普遍ルール（正典）に、どこからをClaude固有（アダプタ）に置くかの線引き。混ぜると移行できなくなる。</li>
+<li><strong>セッション境界の設計</strong>: 「ファイルが真実」という思想と、実際には会話にメモしてしまう習慣との矛盾を、handover/devlogの分離で解消するまでが試行錯誤だった。</li>
+</ul>
+<h2>制約・トレードオフ</h2>
+<ul>
+<li>リッチなGUIやリアルタイム性はない（プレーンテキストと引き換え）。</li>
+<li>規約前提の運用なので、命名・テンプレート・frontmatterを守る規律が要る。仕組みではなく規約で品質を担保している。</li>
+</ul>
+<h2>今後追加したい機能</h2>
+<ul>
+<li><code>knowledge/</code> 横断検索（実装前に過去の知見を自動参照）</li>
+<li>週次レビューの自動生成（全devlogを集計し進捗と停滞を報告）</li>
+<li>マルチエージェントによる設計・コードレビューの並列化</li>
+</ul>
+<h2>この作品の位置づけ</h2>
+<p>自分の制作全体の一貫軸である「<strong>学習・創作の体験設計</strong>」を、他の作品に適用する側ではなく、開発プロセスそのものに適用した作品。個々のアプリを生み出す母艦であり、「作るために学ぶ／仕組みで問題を解決する」という自分の姿勢が最も濃く出ている。単体のアプリ以上に、<strong>どう作り続けるかの思想</strong>を形にしたもの。</p>
+<h2>スクリーンショット</h2>
+<!-- assets/dev-os-*.png（ダッシュボード・Obsidianグラフ・ディレクトリ構成など）を後で配置 -->
+
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">生成日時 2026-07-09 ・ 原稿 <code>portfolio/dev-os.md</code> から自動生成</div>
+</footer>
+</body>
+</html>

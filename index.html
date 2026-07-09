@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Personal Knowledge &amp; Creation OS</title>
+<meta name="description" content="Markdownファイル群 + Git + AIエージェントで構成した、AI非依存の個人開発OS。知識も状態もすべて自分が所有するプレーンテキストに置き、AI（Claude / ChatGPT / Gemini …）は交換可能な実行エンジンとして動かします。このサイト自体も、そのOSのポートフォリオ生成機能でこの原稿から作られています。">
+<link rel="stylesheet" href="assets/style.css">
+<!-- このファイルは自動生成されます（dev-os/scripts/portfolio/generate.mjs）。直接編集しないこと。 -->
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <h1>Personal Knowledge &amp; Creation OS</h1>
+    <p class="tagline">AIを記憶装置にしない。</p>
+    <p class="intro">Markdownファイル群 + Git + AIエージェントで構成した、AI非依存の個人開発OS。知識も状態もすべて自分が所有するプレーンテキストに置き、AI（Claude / ChatGPT / Gemini …）は交換可能な実行エンジンとして動かします。このサイト自体も、そのOSのポートフォリオ生成機能でこの原稿から作られています。</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="filters" id="category-filters" aria-label="カテゴリで絞り込み"></div>
+  <div class="filters" id="year-filters" aria-label="年で絞り込み"></div>
+  <div class="grid" id="grid"></div>
+  <p class="empty" id="empty" hidden>該当する作品がありません。</p>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">生成日時 2026-07-09 ・ このサイトは <code>portfolio/&lt;slug&gt;.md</code> から自動生成されています</div>
+</footer>
+
+<script>
+// プロジェクトデータはビルド時にJS変数として埋め込む（fetch不要＝file://でもGitHub Pagesでも動く）。
+// JSONは有効なJSオブジェクトリテラルなので、そのまま代入できる（application/jsonの島にしない＝構文チェックも通る）。
+var PORTFOLIO_DATA = {"projects":[{"slug":"dev-os","title":"Personal Knowledge & Creation OS","description":"個人の学習・研究・創作・開発を一貫フローで支える、AI非依存のMarkdownベース開発OS。作品を生み出す母艦そのもの","year":2026,"status":"active","category":["ai"],"tech":["Markdown","Git","Claude Code","Obsidian","Node.js"],"form":"Markdown + Git + AIエージェント","url":"https://shimi-works.github.io/dev-os-showcase/","github":"","thumbnail":""}]};
+(function () {
+  "use strict";
+  var CATEGORY_LABELS = {
+    ai: "AI", education: "教育", reading: "読書", music: "音楽", creation: "創作"
+  };
+  var projects = (PORTFOLIO_DATA && PORTFOLIO_DATA.projects) || [];
+
+  var state = { category: null, year: null };
+
+  var grid = document.getElementById("grid");
+  var emptyMsg = document.getElementById("empty");
+
+  function uniqueSorted(values) {
+    return Array.from(new Set(values)).sort();
+  }
+
+  function allCategories() {
+    var cats = [];
+    projects.forEach(function (p) { (p.category || []).forEach(function (c) { cats.push(c); }); });
+    return uniqueSorted(cats);
+  }
+
+  function allYears() {
+    return uniqueSorted(projects.map(function (p) { return p.year; })).reverse();
+  }
+
+  function buildChips(container, items, labelFn, key) {
+    container.innerHTML = "";
+    var all = document.createElement("button");
+    all.className = "chip active";
+    all.textContent = "すべて";
+    all.addEventListener("click", function () { state[key] = null; syncChips(container, key); render(); });
+    container.appendChild(all);
+    items.forEach(function (item) {
+      var chip = document.createElement("button");
+      chip.className = "chip";
+      chip.textContent = labelFn(item);
+      chip.dataset.value = String(item);
+      chip.addEventListener("click", function () {
+        state[key] = (state[key] === item) ? null : item;
+        syncChips(container, key);
+        render();
+      });
+      container.appendChild(chip);
+    });
+  }
+
+  function syncChips(container, key) {
+    var chips = container.querySelectorAll(".chip");
+    chips.forEach(function (chip) {
+      var val = chip.dataset.value;
+      var isAll = val === undefined;
+      var active = isAll ? (state[key] === null) : (String(state[key]) === val);
+      chip.classList.toggle("active", active);
+    });
+  }
+
+  function matches(p) {
+    if (state.category && !(p.category || []).includes(state.category)) return false;
+    if (state.year && p.year !== state.year) return false;
+    return true;
+  }
+
+  function cardHTML(p) {
+    var thumb = p.thumbnail
+      ? '<img src="' + escapeAttr(p.thumbnail) + '" alt="' + escapeAttr(p.title) + '">'
+      : escapeHTML(p.title);
+    var tags = (p.tech || []).slice(0, 3).map(function (t) {
+      return '<span class="tag">' + escapeHTML(t) + '</span>';
+    }).join("");
+    return '' +
+      '<article class="card">' +
+        '<a class="card-link" href="p/' + escapeAttr(p.slug) + '.html">' +
+          '<div class="thumb">' + thumb + '</div>' +
+          '<div class="body">' +
+            '<h2>' + escapeHTML(p.title) + '</h2>' +
+            '<p class="desc">' + escapeHTML(p.description || "") + '</p>' +
+            '<div class="meta">' + tags + '<span class="year">' + escapeHTML(String(p.year)) + '</span></div>' +
+          '</div>' +
+        '</a>' +
+      '</article>';
+  }
+
+  function render() {
+    var shown = projects.filter(matches);
+    // 年の新しい順、同年ならタイトル順
+    shown.sort(function (a, b) { return (b.year - a.year) || String(a.title).localeCompare(b.title, "ja"); });
+    grid.innerHTML = shown.map(cardHTML).join("");
+    emptyMsg.hidden = shown.length > 0;
+  }
+
+  function escapeHTML(s) {
+    return String(s).replace(/[&<>]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c];
+    });
+  }
+  function escapeAttr(s) {
+    return escapeHTML(s).replace(/"/g, "&quot;");
+  }
+
+  buildChips(document.getElementById("category-filters"), allCategories(),
+    function (c) { return CATEGORY_LABELS[c] || c; }, "category");
+  buildChips(document.getElementById("year-filters"), allYears(),
+    function (y) { return String(y); }, "year");
+  render();
+})();
+</script>
+</body>
+</html>
